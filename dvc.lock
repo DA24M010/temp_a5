@@ -1,0 +1,93 @@
+schema: '2.0'
+stages:
+  pull_data:
+    cmd: python scripts/pull_data.py
+    deps:
+    - path: scripts/pull_data.py
+      hash: md5
+      md5: 6b2109047470639e819ad0aa07bf27dc
+      size: 2940
+    params:
+      params.yaml:
+        dataset.version: v2+v3
+    outs:
+    - path: dataset.pkl
+      hash: md5
+      md5: 3ea42f04cebb8f129369217e69c8c082
+      size: 90990456
+  prepare_data:
+    cmd: python scripts/prepare_data.py
+    deps:
+    - path: dataset.pkl
+      hash: md5
+      md5: 3ea42f04cebb8f129369217e69c8c082
+      size: 90990456
+    - path: scripts/prepare_data.py
+      hash: md5
+      md5: ac56e764c8be49f26b8eee15dd6ad46c
+      size: 1135
+    params:
+      params.yaml:
+        seed: 42
+        split.test: 0.15
+        split.train: 0.7
+        split.val: 0.15
+    outs:
+    - path: dataset_splits.pkl
+      hash: md5
+      md5: cf54aa1cb094a3caeab3b8d2e65c91ca
+      size: 90990814
+  train_model:
+    cmd: python scripts/train_model.py
+    deps:
+    - path: dataset_splits.pkl
+      hash: md5
+      md5: cf54aa1cb094a3caeab3b8d2e65c91ca
+      size: 90990814
+    - path: scripts/model.py
+      hash: md5
+      md5: 982b7b5e2a477f0b74e19b6aa6ade763
+      size: 2269
+    - path: scripts/train_model.py
+      hash: md5
+      md5: 7a855b641390df455bb0de5add1f3174
+      size: 3145
+    params:
+      params.yaml:
+        model.conv_layers:
+        - 2
+        - 3
+        - 4
+        model.lr:
+        - 0.001
+        - 0.0005
+        - 0.0001
+        seed: 42
+    outs:
+    - path: tuned_model.pth
+      hash: md5
+      md5: 015f404dfe5fc400c27aa657a28827ce
+      size: 838640
+  evaluate_model:
+    cmd: python scripts/evaluate_model.py
+    deps:
+    - path: dataset_splits.pkl
+      hash: md5
+      md5: cf54aa1cb094a3caeab3b8d2e65c91ca
+      size: 90990814
+    - path: scripts/evaluate_model.py
+      hash: md5
+      md5: c7af48be15c63b47e6dfb74b69b858b1
+      size: 3790
+    - path: tuned_model.pth
+      hash: md5
+      md5: 015f404dfe5fc400c27aa657a28827ce
+      size: 838640
+    params:
+      params.yaml:
+        seed: 42
+    outs:
+    - path: evaluation_report.json
+      hash: md5
+      md5: f91812ba530dfe58a5f461b1bb3174c9
+      size: 4132

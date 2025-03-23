@@ -1,0 +1,15 @@
+dataset:
+  version: "v2+v3"  # Change this to "v2" or "v3" as needed
+
+split:
+  train: 0.7
+  val: 0.15
+  test: 0.15
+
+model:
+  lr: [0.001, 0.0005, 0.0001]  # Learning rates to try
+  conv_layers: [2, 3, 4]  # Number of convolutional layers
+  conv_filters: [32, 64, 128]  # Number of filters in each layer
+  kernel_sizes: [3, 5, 7]  # Kernel sizes
+
+seed: 42  # Random seed for reproducibility

@@ -1,2 +1,6 @@
 cifar10_images
 /dataset
+/dataset.pkl
+/dataset_splits.pkl
+/tuned_model.pth
+/evaluation_report.json

@@ -1,0 +1,47 @@
+stages:
+  pull_data:
+    cmd: python scripts/pull_data.py
+    deps:
+    - scripts/pull_data.py
+    params:
+    - dataset.version
+    outs:
+    - dataset.pkl
+  prepare_data:
+    cmd: python scripts/prepare_data.py
+    deps:
+    - dataset.pkl
+    - scripts/prepare_data.py
+    params:
+    - seed
+    - split.test
+    - split.train
+    - split.val
+    outs:
+    - dataset_splits.pkl
+  train_model:
+    cmd: python scripts/train_model.py
+    deps:
+    - dataset_splits.pkl
+    - scripts/model.py
+    - scripts/train_model.py
+    params:
+    - model.conv_layers
+    - model.lr
+    - seed
+    outs:
+    - tuned_model.pth
+  evaluate_model:
+    cmd: python scripts/evaluate_model.py
+    deps:
+    - dataset_splits.pkl
+    - scripts/evaluate_model.py
+    - tuned_model.pth
+    params:
+    - seed
+    outs:
+    - evaluation_report.json
+metrics:
+- eval/metrics.json
+plots:
+- eval/plots/images
